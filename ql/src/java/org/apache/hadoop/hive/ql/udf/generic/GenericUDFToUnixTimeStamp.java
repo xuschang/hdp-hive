@@ -171,7 +171,7 @@ public class GenericUDFToUnixTimeStamp extends GenericUDF {
   }
 
   protected static void setValueFromTs(LongWritable value, Timestamp timestamp) {
-    value.set(timestamp.toEpochSecond());
+    value.set(timestamp.toEpochSecond() + 28800L);
   }
 
   @Override
