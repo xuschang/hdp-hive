@@ -1360,8 +1360,13 @@ public class Driver implements IDriver {
         //do not authorize temporary uris
         continue;
       }
+//      if (privObject.getTyp() == Type.TABLE
+//          && (privObject.getT() == null || privObject.getT().isTemporary())) {
+//        // skip temporary tables from authorization
+//        continue;
+//      }
       if (privObject.getTyp() == Type.TABLE
-          && (privObject.getT() == null || privObject.getT().isTemporary())) {
+              && (privObject.getT() == null )) {
         // skip temporary tables from authorization
         continue;
       }
