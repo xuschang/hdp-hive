@@ -34,7 +34,7 @@ import org.apache.hadoop.hive.common.StringInternUtils;
 import org.apache.hadoop.hive.ql.lib.Node;
 
 /**
- *
+ *一个树形结构，包含有父子指针。兄弟节点多个
  */
 public class ASTNode extends CommonTree implements Node,Serializable {
   private static final long serialVersionUID = 1L;

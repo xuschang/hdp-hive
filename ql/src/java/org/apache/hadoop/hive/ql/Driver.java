@@ -2381,7 +2381,7 @@ public class Driver implements IDriver {
       perfLogger.PerfLogBegin(CLASS_NAME, PerfLogger.RUN_TASKS);
       // Loop while you either have tasks running, or tasks queued up
       while (driverCxt.isRunning()) {
-        // Launch upto maxthreads tasks
+        // Launch upto maxthreads tasks,达到并行度上限了
         Task<? extends Serializable> task;
         while ((task = driverCxt.getRunnable(maxthreads)) != null) {
           TaskRunner runner = launchTask(task, queryId, noName, jobname, jobs, driverCxt);

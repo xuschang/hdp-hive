@@ -4486,6 +4486,7 @@ public final class Utilities {
   }
 
   /**
+   * 验证路径是否是可写的，没有新建，有的的话判断
    * Checks if path passed in exists and has writable permissions.
    * The path will be created if it does not exist.
    * @param rootHDFSDirPath

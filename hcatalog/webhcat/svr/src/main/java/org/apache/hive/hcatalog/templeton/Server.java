@@ -912,6 +912,7 @@ public class Server {
     }
   }
 
+
   /**
    * All 'tasks' spawned by WebHCat should be run as this user.  W/o doAs query parameter
    * this is just the user making the request (or

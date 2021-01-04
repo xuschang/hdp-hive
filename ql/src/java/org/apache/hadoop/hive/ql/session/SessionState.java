@@ -109,7 +109,7 @@ import com.google.common.collect.Maps;
 
 /**
  * SessionState encapsulates common data associated with a session.
- *
+ * SessionState 封装了静态数据
  * Also provides support for a thread static session object that can be accessed
  * from any point in the code to interact with the user and to retrieve
  * configuration information
@@ -126,6 +126,7 @@ public class SessionState {
 
   /**
    * Concurrent since SessionState is often propagated to workers in thread pools
+   * 这里使用了并发类，看看是不是和线程相关
    */
   private final Map<String, Map<String, Table>> tempTables = new ConcurrentHashMap<>();
   private final Map<String, Map<String, ColumnStatisticsObj>> tempTableColStats =
@@ -221,6 +222,7 @@ public class SessionState {
   private Map<String, String> hiveVariables;
 
   // A mapping from a hadoop job ID to the stack traces collected from the map reduce task logs
+  // hadoop job ID to the stack
   private Map<String, List<List<String>>> stackTraces;
 
   // This mapping collects all the configuration variables which have been set by the user
@@ -919,6 +921,7 @@ public class SessionState {
             : CLIENT_TYPE.HIVECLI);
         authzContextBuilder.setSessionString(getSessionId());
 
+        //包含有上下文，工厂类实现，conf
         authorizerV2 = authorizerFactory.createHiveAuthorizer(new HiveMetastoreClientFactoryImpl(),
             sessionConf, authenticator, authzContextBuilder.build());
         setAuthorizerV2Config();

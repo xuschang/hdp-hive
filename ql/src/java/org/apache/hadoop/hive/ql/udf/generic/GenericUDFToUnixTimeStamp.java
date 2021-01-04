@@ -20,6 +20,7 @@ package org.apache.hadoop.hive.ql.udf.generic;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.TimeZone;
 
 import org.apache.commons.lang.StringUtils;
@@ -50,8 +51,8 @@ import org.apache.hadoop.io.LongWritable;
  * deterministic version of UDFUnixTimeStamp. enforces argument
  */
 @Description(name = "to_unix_timestamp",
-    value = "_FUNC_(date[, pattern]) - Returns the UNIX timestamp",
-    extended = "Converts the specified time to number of seconds since 1970-01-01.")
+        value = "_FUNC_(date[, pattern]) - Returns the UNIX timestamp",
+        extended = "Converts the specified time to number of seconds since 1970-01-01.")
 @VectorizedExpressions({VectorUDFUnixTimeStampDate.class, VectorUDFUnixTimeStampString.class, VectorUDFUnixTimeStampTimestamp.class})
 public class GenericUDFToUnixTimeStamp extends GenericUDF {
 
@@ -73,16 +74,18 @@ public class GenericUDFToUnixTimeStamp extends GenericUDF {
   protected void initializeInput(ObjectInspector[] arguments) throws UDFArgumentException {
     if (arguments.length < 1) {
       throw new UDFArgumentLengthException("The function " + getName().toUpperCase() +
-          "requires at least one argument");
+              "requires at least one argument");
     }
     for (ObjectInspector argument : arguments) {
       if (arguments[0].getCategory() != Category.PRIMITIVE) {
         throw new UDFArgumentException(getName().toUpperCase() +
-            " only takes string/date/timestamp types, got " + argument.getTypeName());
+                " only takes string/date/timestamp types, got " + argument.getTypeName());
       }
     }
 
-    formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+    //get current time_zone  by xsc
+    ZoneId zoneId  = ZoneId.systemDefault();
+    formatter.setTimeZone(TimeZone.getTimeZone(zoneId.toString()));
 
     PrimitiveObjectInspector arg1OI = (PrimitiveObjectInspector) arguments[0];
     switch (arg1OI.getPrimitiveCategory()) {
@@ -90,16 +93,16 @@ public class GenericUDFToUnixTimeStamp extends GenericUDF {
       case VARCHAR:
       case STRING:
         inputTextConverter = ObjectInspectorConverters.getConverter(arg1OI,
-            PrimitiveObjectInspectorFactory.javaStringObjectInspector);
+                PrimitiveObjectInspectorFactory.javaStringObjectInspector);
         if (arguments.length > 1) {
           PrimitiveObjectInspector arg2OI = (PrimitiveObjectInspector) arguments[1];
           if (PrimitiveObjectInspectorUtils.getPrimitiveGrouping(arg2OI.getPrimitiveCategory())
-              != PrimitiveGrouping.STRING_GROUP) {
+                  != PrimitiveGrouping.STRING_GROUP) {
             throw new UDFArgumentException(
-              "The time pattern for " + getName().toUpperCase() + " should be string type");
+                    "The time pattern for " + getName().toUpperCase() + " should be string type");
           }
           patternConverter = ObjectInspectorConverters.getConverter(arg2OI,
-              PrimitiveObjectInspectorFactory.javaStringObjectInspector);
+                  PrimitiveObjectInspectorFactory.javaStringObjectInspector);
         }
         break;
 
@@ -114,8 +117,8 @@ public class GenericUDFToUnixTimeStamp extends GenericUDF {
         break;
       default:
         throw new UDFArgumentException("The function " + getName().toUpperCase()
-            + " takes only string/date/timestamp/timestampwltz types. Got Type:" + arg1OI
-            .getPrimitiveCategory().name());
+                + " takes only string/date/timestamp/timestampwltz types. Got Type:" + arg1OI
+                .getPrimitiveCategory().name());
     }
   }
 
@@ -157,11 +160,11 @@ public class GenericUDFToUnixTimeStamp extends GenericUDF {
       }
     } else if (inputDateOI != null) {
       retValue.set(inputDateOI.getPrimitiveWritableObject(arguments[0].get())
-                   .getTimeInSeconds());
+              .getTimeInSeconds());
       return retValue;
     } else if (inputTimestampLocalTzOI != null)  {
       TimestampTZ timestampTZ =
-          inputTimestampLocalTzOI.getPrimitiveJavaObject(arguments[0].get());
+              inputTimestampLocalTzOI.getPrimitiveJavaObject(arguments[0].get());
       retValue.set(timestampTZ.getEpochSecond());
       return retValue;
     }

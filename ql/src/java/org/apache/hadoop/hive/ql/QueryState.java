@@ -31,6 +31,7 @@ import org.apache.tez.dag.api.TezConfiguration;
  * The class to store query level info such as queryId. Multiple queries can run
  * in the same session, so SessionState is to hold common session related info, and
  * each QueryState is to hold query related info.
+ * 存储类
  */
 public class QueryState {
   /**

@@ -395,6 +395,9 @@ public final class HiveUtils {
   }
 
   @SuppressWarnings("unchecked")
+  /**
+   * 通过反射调用类，返回类的对象，这个类集成HiveAuthenticationProvider
+   */
   public static HiveAuthenticationProvider getAuthenticator(
       Configuration conf, HiveConf.ConfVars authenticatorConfKey
       ) throws HiveException {
